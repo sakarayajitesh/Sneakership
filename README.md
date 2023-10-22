@@ -2,12 +2,12 @@
 
 ## Table of Contents
 
-1. [Introduction](#introduction)
-2. [Features](#features)
-3. [Decisions and Assumptions](#decisions-and-assumptions)
-4. [Screens and Functionality](#screens-and-functionality)
-5. [Data Flow](#data-flow)
-6. [Future Enhancements](#future-enhancements)
+1. [Introduction](#1-introduction)
+2. [Features](#2-features)
+3. [Decisions and Assumptions](#3-decisions-and-assumptions)
+4. [Screens and Functionality](#4-screens-and-functionality)
+5. [Data Flow](#5-data-flow)
+6. [Future Enhancements](#6-future-enhancements)
 
 
 ## 1. Introduction
