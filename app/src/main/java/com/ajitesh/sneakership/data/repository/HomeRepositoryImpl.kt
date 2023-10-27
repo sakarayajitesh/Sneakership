@@ -1,22 +1,31 @@
 package com.ajitesh.sneakership.data.repository
 
+import com.ajitesh.sneakership.data.FakeData
 import com.ajitesh.sneakership.data.datasource.local.dao.CartDao
 import com.ajitesh.sneakership.data.datasource.local.dao.SneakerDao
 import com.ajitesh.sneakership.data.datasource.local.entity.CartEntity
 import com.ajitesh.sneakership.domain.repository.HomeRepository
 import com.ajitesh.sneakership.toSneakerEntityList
 import com.ajitesh.sneakership.toSneakerList
-import com.ajitesh.sneakership.data.FakeData
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 
-class HomeRepositoryImpl(private val sneakerDao: SneakerDao, private val cartDao: CartDao): HomeRepository {
+class HomeRepositoryImpl(
+    private val sneakerDao: SneakerDao,
+    private val cartDao: CartDao,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : HomeRepository {
 
     override suspend fun fetchData() {
-        cartDao.deleteAll()
-        sneakerDao.deleteAll()
-        val sneakerEntityList = FakeData.getFakeSneakerList().toSneakerEntityList()
-        sneakerDao.insertAll(*sneakerEntityList.toTypedArray())
+        withContext(defaultDispatcher) {
+            cartDao.deleteAll()
+            sneakerDao.deleteAll()
+            val sneakerEntityList = FakeData.getFakeSneakerList().toSneakerEntityList()
+            sneakerDao.insertAll(*sneakerEntityList.toTypedArray())
+        }
     }
 
     override fun getAllSneakers() = sneakerDao.getAll().map {
@@ -25,6 +34,9 @@ class HomeRepositoryImpl(private val sneakerDao: SneakerDao, private val cartDao
 
     override suspend fun addToCart(id: String) {
         val cart = CartEntity(id)
-        cartDao.insertAll(cart)
+        withContext(defaultDispatcher) {
+            cartDao.insertAll(cart)
+        }
+
     }
 }
