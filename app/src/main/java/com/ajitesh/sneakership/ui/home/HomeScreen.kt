@@ -44,7 +44,7 @@ fun HomeScreen(
     searchText: String,
     searchTextChange: (String) -> Unit,
     navigate: (String) -> Unit,
-    addToCart: (String) -> Unit
+    addToCart: (String, () -> Unit) -> Unit
 ) {
     Scaffold(
         topBar = { HomeAppBar(navigate = navigate) }
@@ -91,7 +91,7 @@ private fun SneakerList(
     sneakerList: List<Sneaker>,
     searchText: String,
     searchTextChange: (String) -> Unit,
-    addToCart: (String) -> Unit,
+    addToCart: (String, () -> Unit) -> Unit,
     navigate: (String) -> Unit
 ) {
     Column {
@@ -177,6 +177,6 @@ private fun PreviewHomeScreen() {
         uiState = uiState,
         searchText = "",
         searchTextChange = {},
-        addToCart = {},
+        addToCart = { _, _ -> },
         navigate = {})
 }

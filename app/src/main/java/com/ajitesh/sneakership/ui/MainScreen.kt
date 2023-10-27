@@ -51,7 +51,6 @@ fun MainScreen() {
             CartScreen(
                 uiState = cartUiState,
                 deleteFromCart = cartViewModel::deleteFromCart,
-                onCheckout = cartViewModel::onCheckout,
                 navigateBack = navController::popBackStack
             )
         }

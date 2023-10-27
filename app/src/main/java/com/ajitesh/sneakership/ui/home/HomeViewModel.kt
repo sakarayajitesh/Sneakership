@@ -1,9 +1,7 @@
 package com.ajitesh.sneakership.ui.home
 
-import android.app.Application
 import android.util.Log
-import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ajitesh.sneakership.domain.data.Sneaker
 import com.ajitesh.sneakership.domain.repository.HomeRepository
@@ -21,9 +19,8 @@ sealed class HomeUiState {
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val application: Application,
     private val homeRepository: HomeRepository
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     private val _homeUiState =
         MutableStateFlow<HomeUiState>(HomeUiState.ShowSneakerList(emptyList()))
@@ -61,10 +58,10 @@ class HomeViewModel @Inject constructor(
         Log.d("Search", searchText)
     }
 
-    fun addToCart(id: String) {
+    fun addToCart(id: String, onTaskCompletion: () -> Unit) {
         viewModelScope.launch {
             homeRepository.addToCart(id)
-            Toast.makeText(application, "Added to cart", Toast.LENGTH_SHORT).show()
+            onTaskCompletion()
         }
     }
 }

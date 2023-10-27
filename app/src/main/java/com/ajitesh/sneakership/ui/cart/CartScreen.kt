@@ -1,5 +1,6 @@
 package com.ajitesh.sneakership.ui.cart
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,8 +48,7 @@ import java.util.UUID
 @Composable
 fun CartScreen(
     uiState: CartUiState,
-    deleteFromCart: (String) -> Unit,
-    onCheckout: () -> Unit,
+    deleteFromCart: (String, () -> Unit) -> Unit,
     navigateBack: () -> Unit
 ) {
     Scaffold(topBar = { CartAppBar(navigateBack) }) { innerPadding ->
@@ -65,7 +66,6 @@ fun CartScreen(
                     CartItems(
                         sneakerList = sneakerList,
                         deleteFromCart = deleteFromCart,
-                        onCheckout = onCheckout
                     )
                 }
             }
@@ -86,9 +86,9 @@ private fun CartEmpty(modifier: Modifier = Modifier) {
 @Composable
 private fun CartItems(
     sneakerList: List<Sneaker>,
-    deleteFromCart: (String) -> Unit,
-    onCheckout: () -> Unit
+    deleteFromCart: (String, () -> Unit) -> Unit,
 ) {
+    val context = LocalContext.current
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         repeat(sneakerList.size) { index ->
             val it = sneakerList[index]
@@ -101,7 +101,11 @@ private fun CartItems(
                         .align(
                             Alignment.TopEnd
                         ),
-                    onClick = { deleteFromCart(it.id) }
+                    onClick = {
+                        deleteFromCart(it.id) {
+                            Toast.makeText(context, "Removed from cart", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 ) {
                     Icon(
                         Icons.Filled.Close,
@@ -112,7 +116,7 @@ private fun CartItems(
             }
         }
         Box(modifier = Modifier.height(16.dp))
-        OrderDetails(sneakerList = sneakerList, onCheckout = onCheckout)
+        OrderDetails(sneakerList = sneakerList)
         Box(modifier = Modifier.height(100.dp))
     }
 }
@@ -142,9 +146,9 @@ private fun CartTile(sneaker: Sneaker) {
 @Composable
 private fun OrderDetails(
     sneakerList: List<Sneaker>,
-    onCheckout: () -> kotlin.Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     val totalPrice = sneakerList.getTotalPrice() + TAXANDCHARGES
     Column(modifier = modifier.padding(horizontal = 8.dp)) {
         Text(
@@ -176,7 +180,9 @@ private fun OrderDetails(
                 Text(text = totalPrice.asPrice(), fontWeight = FontWeight.Medium)
             }
             Button(
-                onClick = onCheckout,
+                onClick = {
+                    Toast.makeText(context, "Not implemented yet", Toast.LENGTH_SHORT).show()
+                },
                 modifier = Modifier.height(60.dp),
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = LightOrange)
@@ -217,5 +223,5 @@ private fun PreviewCartScreen() {
         yearOfRelease = "2022"
     )
     val uiState = CartUiState.ShowCartList(listOf(sneaker))
-    CartScreen(uiState = uiState, deleteFromCart = {}, onCheckout = {}, navigateBack = {})
+    CartScreen(uiState = uiState, deleteFromCart = { _, _ -> }, navigateBack = {})
 }

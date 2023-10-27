@@ -1,5 +1,6 @@
 package com.ajitesh.sneakership.ui.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,7 +42,11 @@ import com.ajitesh.sneakership.ui.theme.LightOrange
 import java.util.UUID
 
 @Composable
-fun DetailScreen(uiState: DetailUiState, addToCart: (String) -> Unit, navigateBack: () -> Unit) {
+fun DetailScreen(
+    uiState: DetailUiState,
+    addToCart: (String, () -> Unit) -> Unit,
+    navigateBack: () -> Unit
+) {
     Scaffold(
         topBar = { DetailAppBar(navigateBack) }
     ) { _ ->
@@ -58,7 +64,8 @@ fun DetailScreen(uiState: DetailUiState, addToCart: (String) -> Unit, navigateBa
 }
 
 @Composable
-private fun DetailSneaker(sneaker: Sneaker, addToCart: (String) -> Unit) {
+private fun DetailSneaker(sneaker: Sneaker, addToCart: (String, () -> Unit) -> Unit) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top
@@ -111,7 +118,12 @@ private fun DetailSneaker(sneaker: Sneaker, addToCart: (String) -> Unit) {
                         )
                     }
                     Button(
-                        onClick = { addToCart(sneaker.id) },
+                        onClick = {
+                            addToCart(sneaker.id) {
+                                Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        },
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = LightOrange),
                         modifier = Modifier
@@ -160,5 +172,5 @@ private fun PreviewDetailScreen() {
         yearOfRelease = "2022"
     )
     val uiState = DetailUiState.ShowSneaker(sneaker)
-    DetailScreen(uiState = uiState, addToCart = {}, navigateBack = {})
+    DetailScreen(uiState = uiState, addToCart = { _, _ -> }, navigateBack = {})
 }

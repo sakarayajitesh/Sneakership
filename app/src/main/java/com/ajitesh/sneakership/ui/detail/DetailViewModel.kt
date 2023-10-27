@@ -1,14 +1,10 @@
 package com.ajitesh.sneakership.ui.detail
 
-import android.app.Application
-import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ajitesh.sneakership.domain.data.Sneaker
 import com.ajitesh.sneakership.domain.repository.DetailRepository
-import com.ajitesh.sneakership.domain.repository.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,9 +19,8 @@ sealed class DetailUiState{
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val application: Application,
     private val detailRepository: DetailRepository
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     private val sneakerId: String = checkNotNull(savedStateHandle["sneakerId"])
 
@@ -43,10 +38,10 @@ class DetailViewModel @Inject constructor(
         _detailUiState.value = newUiState
     }
 
-    fun addToCart(id: String){
+    fun addToCart(id: String, onTaskCompletion: () -> Unit) {
         viewModelScope.launch {
             detailRepository.addToCart(id)
-            Toast.makeText(application, "Added to cart", Toast.LENGTH_SHORT).show()
+            onTaskCompletion()
         }
     }
 

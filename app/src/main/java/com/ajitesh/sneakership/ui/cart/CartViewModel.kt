@@ -1,8 +1,6 @@
 package com.ajitesh.sneakership.ui.cart
 
-import android.app.Application
-import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ajitesh.sneakership.domain.data.Sneaker
 import com.ajitesh.sneakership.domain.repository.CartRepository
@@ -18,9 +16,8 @@ sealed class CartUiState {
 
 @HiltViewModel
 class CartViewModel @Inject constructor(
-    private val application: Application,
     private val cartRepository: CartRepository
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     private val _cartUiState = MutableStateFlow<CartUiState>(CartUiState.ShowCartList(emptyList()))
     val cartUiState = _cartUiState.asStateFlow()
@@ -37,14 +34,10 @@ class CartViewModel @Inject constructor(
         _cartUiState.value = newState
     }
 
-    fun deleteFromCart(id: String) {
+    fun deleteFromCart(id: String, onTaskCompletion: () -> Unit) {
         viewModelScope.launch {
             cartRepository.delete(id)
-            Toast.makeText(application, "Removed from cart", Toast.LENGTH_SHORT).show()
+            onTaskCompletion()
         }
-    }
-
-    fun onCheckout(){
-        Toast.makeText(application, "Not implemented yet", Toast.LENGTH_SHORT).show()
     }
 }

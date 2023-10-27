@@ -1,5 +1,6 @@
 package com.ajitesh.sneakership.ui.common
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,7 +32,12 @@ import com.ajitesh.sneakership.ui.theme.LightOrange
 import java.util.UUID
 
 @Composable
-fun SneakerTile(modifier: Modifier = Modifier, sneaker: Sneaker, addToCart: (String) -> Unit) {
+fun SneakerTile(
+    modifier: Modifier = Modifier,
+    sneaker: Sneaker,
+    addToCart: (String, () -> Unit) -> Unit
+) {
+    val context = LocalContext.current
     Card(modifier = modifier.padding(4.dp), shape = RoundedCornerShape(16.dp)) {
         Box(modifier = Modifier.padding(12.dp)) {
             Column(
@@ -41,14 +48,20 @@ fun SneakerTile(modifier: Modifier = Modifier, sneaker: Sneaker, addToCart: (Str
                 SneakerTileImage(sneaker.image)
                 Box(modifier = modifier.height(4.dp))
                 Text(text = sneaker.title, fontWeight = FontWeight.Medium, color = Color.Black)
-                Text(text = sneaker.price.asPrice(), fontWeight = FontWeight.Medium, fontSize = 20.sp)
+                Text(
+                    text = sneaker.price.asPrice(),
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 20.sp
+                )
             }
             IconButton(
                 modifier = Modifier
                     .background(color = LightOrange, shape = CircleShape)
                     .size(28.dp),
                 onClick = {
-                    addToCart(sneaker.id)
+                    addToCart(sneaker.id) {
+                        Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
+                    }
                 }
             ) {
                 Icon(
@@ -73,5 +86,5 @@ fun PreviewSneakerTile() {
         brand = "Puma",
         yearOfRelease = "2022"
     )
-    SneakerTile(sneaker = sneaker, addToCart = {})
+    SneakerTile(sneaker = sneaker, addToCart = { _, _ -> })
 }
