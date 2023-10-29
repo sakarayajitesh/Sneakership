@@ -1,7 +1,6 @@
 package com.ajitesh.sneakership.ui.detail
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,12 +21,10 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -72,26 +69,19 @@ private fun DetailSneaker(sneaker: Sneaker, addToCart: (String, () -> Unit) -> U
     ) {
         Box(
             modifier = Modifier
-                .weight(1f)
-                .aspectRatio(1f)
-                .background(Color.White)
+                .aspectRatio(1.18f)
+//                .background(Color.Gray)
                 .padding(horizontal = 36.dp)
         ) {
             SneakerTileImage(image = sneaker.image)
         }
         Box(
-            modifier = Modifier
-                .weight(1f)
-                .background(Color.White)
-                .clip(shape = RoundedCornerShape(topStart = 36.dp, topEnd = 36.dp))
-                .shadow(
-                    elevation = 2.dp,
-                    shape = RoundedCornerShape(topStart = 36.dp, topEnd = 36.dp),
-                    clip = true
-                )
+            modifier = Modifier.weight(1f)
         ) {
             Column(
-                modifier = Modifier.padding(24.dp)
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth()
             ) {
                 Text(text = sneaker.title, fontSize = 24.sp, fontWeight = FontWeight.Medium)
                 Box(modifier = Modifier.height(24.dp))
@@ -103,20 +93,23 @@ private fun DetailSneaker(sneaker: Sneaker, addToCart: (String, () -> Unit) -> U
                     color = Color.Gray
                 )
                 Box(modifier = Modifier.height(24.dp))
+                Row {
+                    Text(text = "Price: ", fontSize = 20.sp, color = Color.Gray)
+                    Text(
+                        text = sneaker.price.asPrice(),
+                        fontSize = 20.sp,
+                        color = LightOrange,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+                Box(modifier = Modifier.height(24.dp))
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.Bottom
                 ) {
-                    Row {
-                        Text(text = "Price: ", fontSize = 20.sp, color = Color.Gray)
-                        Text(
-                            text = sneaker.price.asPrice(),
-                            fontSize = 20.sp,
-                            color = LightOrange,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
                     Button(
                         onClick = {
                             addToCart(sneaker.id) {
@@ -125,12 +118,20 @@ private fun DetailSneaker(sneaker: Sneaker, addToCart: (String, () -> Unit) -> U
                             }
                         },
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = LightOrange),
-                        modifier = Modifier
-                            .height(50.dp)
-                            .padding(horizontal = 16.dp),
+                        modifier = Modifier.height(50.dp),
                     ) {
-                        Text(text = "Add to Cart", color = Color.White)
+                        Text(text = "Add to Cart", color = LightOrange)
+                    }
+                    Button(
+                        onClick = {
+                            Toast.makeText(context, "Buy now", Toast.LENGTH_SHORT)
+                                .show()
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = LightOrange),
+                        modifier = Modifier.height(50.dp),
+                    ) {
+                        Text(text = "Buy Now", color = Color.White)
                     }
                 }
             }
@@ -151,7 +152,7 @@ private fun DetailAppBar(navigateBack: () -> Unit) {
         navigationIcon = {
             IconButton(onClick = { navigateBack() }) {
                 Icon(
-                    Icons.Filled.KeyboardArrowLeft,
+                    Icons.Filled.ArrowBack,
                     contentDescription = "Back",
                     modifier = Modifier.size(36.dp)
                 )
