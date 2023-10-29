@@ -1,6 +1,7 @@
 package com.ajitesh.sneakership.ui.detail
 
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
@@ -28,14 +30,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ajitesh.sneakership.asPrice
 import com.ajitesh.sneakership.data.FakeData
 import com.ajitesh.sneakership.domain.data.Sneaker
-import com.ajitesh.sneakership.ui.common.SneakerTileImage
-import com.ajitesh.sneakership.ui.theme.Black
+import com.ajitesh.sneakership.ui.theme.LightBlack
+import com.ajitesh.sneakership.ui.theme.LightWhite
+import com.ajitesh.sneakership.ui.theme.Red
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import java.util.UUID
 
 @Composable
@@ -60,6 +66,7 @@ fun DetailScreen(
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun DetailSneaker(sneaker: Sneaker, addToCart: (String, () -> Unit) -> Unit) {
     val context = LocalContext.current
@@ -69,11 +76,17 @@ private fun DetailSneaker(sneaker: Sneaker, addToCart: (String, () -> Unit) -> U
     ) {
         Box(
             modifier = Modifier
-                .aspectRatio(1.18f)
-//                .background(Color.Gray)
-                .padding(horizontal = 36.dp)
+                .fillMaxWidth()
+                .aspectRatio(1.2f)
+                .background(Color.LightGray)
         ) {
-            SneakerTileImage(image = sneaker.image)
+            GlideImage(
+                model = sneaker.image,
+                contentDescription = "Sneaker Image",
+                modifier = Modifier
+                    .fillMaxSize(fraction = 0.75f)
+                    .align(Alignment.Center)
+            )
         }
         Box(
             modifier = Modifier.weight(1f)
@@ -83,56 +96,45 @@ private fun DetailSneaker(sneaker: Sneaker, addToCart: (String, () -> Unit) -> U
                     .padding(24.dp)
                     .fillMaxWidth()
             ) {
-                Text(text = sneaker.title, fontSize = 24.sp, fontWeight = FontWeight.Medium)
+                Text(text = sneaker.brand, fontSize = 16.sp, color = Color.Gray)
+                Text(text = sneaker.title, fontSize = 24.sp)
                 Box(modifier = Modifier.height(24.dp))
-                Text(text = "Brand : ${sneaker.brand}", fontSize = 20.sp, color = Color.Gray)
-                Box(modifier = Modifier.height(24.dp))
-                Text(
-                    text = "Year of release : ${sneaker.yearOfRelease}",
-                    fontSize = 20.sp,
-                    color = Color.Gray
-                )
-                Box(modifier = Modifier.height(24.dp))
-                Row {
-                    Text(text = "Price: ", fontSize = 20.sp, color = Color.Gray)
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    val discount = sneaker.price - 20
+                    Text(
+                        text = discount.asPrice(),
+                        fontSize = 16.sp,
+                        color = Color.Gray,
+                        textDecoration = TextDecoration.LineThrough
+                    )
                     Text(
                         text = sneaker.price.asPrice(),
-                        fontSize = 20.sp,
-                        color = Black,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp,
+                        color = Red
                     )
                 }
                 Box(modifier = Modifier.height(24.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom
-                ) {
-                    Button(
-                        onClick = {
-                            addToCart(sneaker.id) {
-                                Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.height(50.dp),
-                    ) {
-                        Text(text = "Add to Cart", color = Black)
-                    }
-                    Button(
-                        onClick = {
-                            Toast.makeText(context, "Buy now", Toast.LENGTH_SHORT)
+                Divider(color = Color(0XFFCBD7E1))
+                Box(modifier = Modifier.weight(1f))
+                Button(
+                    onClick = {
+                        addToCart(sneaker.id) {
+                            Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT)
                                 .show()
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Black),
-                        modifier = Modifier.height(50.dp),
-                    ) {
-                        Text(text = "Buy Now", color = Color.White)
-                    }
+                        }
+                    },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = LightBlack),
+                    modifier = Modifier
+                        .height(50.dp)
+                        .fillMaxWidth(),
+                ) {
+                    Text(text = "Add to Cart", color = LightWhite)
                 }
             }
         }
@@ -157,7 +159,8 @@ private fun DetailAppBar(navigateBack: () -> Unit) {
                     modifier = Modifier.size(36.dp)
                 )
             }
-        }
+        },
+        backgroundColor = Color.LightGray
     )
 }
 
