@@ -35,7 +35,7 @@ import com.ajitesh.sneakership.asPrice
 import com.ajitesh.sneakership.data.FakeData
 import com.ajitesh.sneakership.domain.data.Sneaker
 import com.ajitesh.sneakership.ui.common.SneakerTileImage
-import com.ajitesh.sneakership.ui.theme.LightOrange
+import com.ajitesh.sneakership.ui.theme.Black
 import java.util.UUID
 
 @Composable
@@ -98,7 +98,7 @@ private fun DetailSneaker(sneaker: Sneaker, addToCart: (String, () -> Unit) -> U
                     Text(
                         text = sneaker.price.asPrice(),
                         fontSize = 20.sp,
-                        color = LightOrange,
+                        color = Black,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -120,7 +120,7 @@ private fun DetailSneaker(sneaker: Sneaker, addToCart: (String, () -> Unit) -> U
                         shape = RoundedCornerShape(8.dp),
                         modifier = Modifier.height(50.dp),
                     ) {
-                        Text(text = "Add to Cart", color = LightOrange)
+                        Text(text = "Add to Cart", color = Black)
                     }
                     Button(
                         onClick = {
@@ -128,7 +128,7 @@ private fun DetailSneaker(sneaker: Sneaker, addToCart: (String, () -> Unit) -> U
                                 .show()
                         },
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = LightOrange),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Black),
                         modifier = Modifier.height(50.dp),
                     ) {
                         Text(text = "Buy Now", color = Color.White)

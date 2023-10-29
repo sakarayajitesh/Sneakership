@@ -1,7 +1,6 @@
 package com.ajitesh.sneakership.ui.home
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.ajitesh.sneakership.data.FakeData
 import com.ajitesh.sneakership.domain.data.Sneaker
 import com.ajitesh.sneakership.ui.common.SneakerTile
-import com.ajitesh.sneakership.ui.theme.LightOrange
+import com.ajitesh.sneakership.ui.theme.Black
 import java.util.UUID
 
 @Composable
@@ -52,13 +51,12 @@ fun HomeScreen(
         Box(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(horizontal = 24.dp)
                 .fillMaxSize()
         ) {
             when (uiState) {
                 is HomeUiState.Loading -> {
                     CircularProgressIndicator(
-                        color = LightOrange, modifier = Modifier.align(
+                        color = Black, modifier = Modifier.align(
                             Alignment.Center
                         )
                     )
@@ -102,9 +100,7 @@ private fun SneakerList(
             Text(text = "No results found")
         } else
             LazyVerticalGrid(
-                columns = GridCells.Fixed(count = 2),
-                horizontalArrangement = Arrangement.spacedBy(24.dp),
-                verticalArrangement = Arrangement.spacedBy(24.dp),
+                columns = GridCells.Adaptive(minSize = 200.dp),
                 content = {
                     items(sneakerList) {
                         SneakerTile(
@@ -112,7 +108,8 @@ private fun SneakerList(
                             addToCart = addToCart,
                             modifier = Modifier.clickable {
                                 navigate("detail/${it.id}")
-                            })
+                            }
+                        )
                     }
                 })
     }
@@ -141,7 +138,7 @@ private fun HomeSearchBar(searchText: String, searchTextChange: (String) -> Unit
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Color.Gray,
             unfocusedBorderColor = Color.Gray,
-            cursorColor = LightOrange,
+            cursorColor = Black,
         )
     )
 }
@@ -172,7 +169,7 @@ private fun PreviewHomeScreen() {
         brand = "Puma",
         yearOfRelease = "2022"
     )
-    val uiState = HomeUiState.ShowSneakerList(listOf(sneaker))
+    val uiState = HomeUiState.ShowSneakerList(listOf(sneaker, sneaker, sneaker, sneaker))
     HomeScreen(
         uiState = uiState,
         searchText = "",

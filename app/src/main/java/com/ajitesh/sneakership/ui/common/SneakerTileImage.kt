@@ -8,7 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.ajitesh.sneakership.ui.theme.LightOrange
+import com.ajitesh.sneakership.ui.theme.Black
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 
@@ -20,13 +20,13 @@ fun SneakerTileImage(image: String, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
-                .background(LightOrange.copy(alpha = 0.3f), shape = CircleShape)
+                .background(Black.copy(alpha = 0.3f), shape = CircleShape)
         )
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.75f)
                 .aspectRatio(1f)
-                .background(LightOrange.copy(alpha = 0.3f), shape = CircleShape)
+                .background(Black.copy(alpha = 0.3f), shape = CircleShape)
         )
         GlideImage(model = image, contentDescription = "Sneaker Image")
     }

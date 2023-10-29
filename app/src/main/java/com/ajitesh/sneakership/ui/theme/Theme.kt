@@ -7,8 +7,8 @@ import androidx.compose.ui.graphics.Color
 
 private val colors = lightColors(
     primary = Color(0XFFFFFFFF),
-    onPrimary = LightOrange,
-    secondary = LightOrange
+    onPrimary = OnPrimaryColor,
+    secondary = Secondary
 )
 
 
@@ -18,6 +18,7 @@ fun SneakershipTheme(
 ) {
     MaterialTheme(
         content = content,
-        colors = colors
+        colors = colors,
+        typography = MyTypography
     )
 }

@@ -42,7 +42,7 @@ import com.ajitesh.sneakership.data.FakeData
 import com.ajitesh.sneakership.domain.data.Sneaker
 import com.ajitesh.sneakership.getTotalPrice
 import com.ajitesh.sneakership.ui.common.SneakerTileImage
-import com.ajitesh.sneakership.ui.theme.LightOrange
+import com.ajitesh.sneakership.ui.theme.Black
 import java.util.UUID
 
 @Composable
@@ -96,7 +96,7 @@ private fun CartItems(
                 CartTile(sneaker = it)
                 IconButton(
                     modifier = Modifier
-                        .background(color = LightOrange, shape = CircleShape)
+                        .background(color = Black, shape = CircleShape)
                         .size(28.dp)
                         .align(
                             Alignment.TopEnd
@@ -185,7 +185,7 @@ private fun OrderDetails(
                 },
                 modifier = Modifier.height(60.dp),
                 shape = RoundedCornerShape(8.dp),
-                colors = ButtonDefaults.buttonColors(backgroundColor = LightOrange)
+                colors = ButtonDefaults.buttonColors(backgroundColor = Black)
             ) {
                 Text(text = "Check Out", color = Color.White, fontSize = 16.sp)
             }
