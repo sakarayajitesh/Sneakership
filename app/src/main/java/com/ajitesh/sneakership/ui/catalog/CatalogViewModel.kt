@@ -1,4 +1,4 @@
-package com.ajitesh.sneakership.ui.home
+package com.ajitesh.sneakership.ui.catalog
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -12,19 +12,19 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed class HomeUiState {
-    object Loading : HomeUiState()
-    data class ShowSneakerList(val sneakers: List<Sneaker>) : HomeUiState()
+sealed class CatalogUiState {
+    object Loading : CatalogUiState()
+    data class ShowSneakerList(val sneakers: List<Sneaker>) : CatalogUiState()
 }
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class CatalogViewModel @Inject constructor(
     private val homeRepository: HomeRepository
 ) : ViewModel() {
 
-    private val _homeUiState =
-        MutableStateFlow<HomeUiState>(HomeUiState.ShowSneakerList(emptyList()))
-    val homeUiState = _homeUiState.asStateFlow()
+    private val _catalogUiState =
+        MutableStateFlow<CatalogUiState>(CatalogUiState.ShowSneakerList(emptyList()))
+    val catalogUiState = _catalogUiState.asStateFlow()
 
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             homeRepository.fetchData()
-            updateHomeUiState(HomeUiState.Loading)
+            updateCatalogUiState(CatalogUiState.Loading)
             homeRepository.getAllSneakers()
                 .combine(searchQuery) { sneakers, search ->
                     if (search.isNotEmpty()) {
@@ -43,14 +43,14 @@ class HomeViewModel @Inject constructor(
                         sneakers
                     }
                 }.collect {
-                    updateHomeUiState(HomeUiState.ShowSneakerList(it))
+                    updateCatalogUiState(CatalogUiState.ShowSneakerList(it))
                 }
         }
 
     }
 
-    private fun updateHomeUiState(newState: HomeUiState) {
-        _homeUiState.value = newState
+    private fun updateCatalogUiState(newState: CatalogUiState) {
+        _catalogUiState.value = newState
     }
 
     fun onSearchChange(searchText: String) {

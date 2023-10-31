@@ -4,30 +4,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ajitesh.sneakership.ui.cart.CartScreen
-import com.ajitesh.sneakership.ui.cart.CartViewModel
-import com.ajitesh.sneakership.ui.detail.DetailScreen
-import com.ajitesh.sneakership.ui.detail.DetailViewModel
 import com.ajitesh.sneakership.ui.home.HomeScreen
-import com.ajitesh.sneakership.ui.home.HomeViewModel
 import com.ajitesh.sneakership.ui.saved.SavedScreen
 import com.ajitesh.sneakership.ui.search.SearchScreen
 
@@ -42,12 +40,24 @@ val bottomNavigationItems =
 
 
 @Composable
-fun MainScreen() {
+fun MainScreen(navigate: (String) -> Unit) {
     val navController = rememberNavController()
     var selectedItem by remember { mutableIntStateOf(0) }
 
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "SNEAKERSHIP", fontWeight = FontWeight.Medium) },
+                actions = {
+                    IconButton(onClick = {
+                        navigate("cart")
+                    }) {
+                        Icon(imageVector = Icons.Filled.ShoppingCart, contentDescription = "Cart")
+                    }
+                }
+            )
+        },
         bottomBar = {
             BottomNavigation {
                 bottomNavigationItems.onEachIndexed { index, s ->
@@ -74,34 +84,7 @@ fun MainScreen() {
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("home") {
-                val homeViewModel = hiltViewModel<HomeViewModel>()
-                val homeUiState by homeViewModel.homeUiState.collectAsState()
-                val searchText by homeViewModel.searchQuery.collectAsState()
-                HomeScreen(
-                    uiState = homeUiState,
-                    searchText = searchText,
-                    searchTextChange = homeViewModel::onSearchChange,
-                    addToCart = homeViewModel::addToCart,
-                    navigate = navController::navigate
-                )
-            }
-            composable("detail/{sneakerId}") {
-                val detailViewModel = hiltViewModel<DetailViewModel>()
-                val detailUiState by detailViewModel.detailUiState.collectAsState()
-                DetailScreen(
-                    uiState = detailUiState,
-                    navigateBack = navController::popBackStack,
-                    addToCart = detailViewModel::addToCart
-                )
-            }
-            composable("cart") {
-                val cartViewModel = hiltViewModel<CartViewModel>()
-                val cartUiState by cartViewModel.cartUiState.collectAsState()
-                CartScreen(
-                    uiState = cartUiState,
-                    deleteFromCart = cartViewModel::deleteFromCart,
-                    navigateBack = navController::popBackStack
-                )
+                HomeScreen(navigate = navigate)
             }
             composable("search") {
                 SearchScreen()
@@ -119,5 +102,5 @@ fun MainScreen() {
 @Preview
 @Composable
 fun PreviewMainScreen() {
-    MainScreen()
+    MainScreen(navigate = {})
 }
