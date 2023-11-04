@@ -1,5 +1,7 @@
 package com.ajitesh.sneakership.ui
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
@@ -86,7 +88,9 @@ fun MainScreen(navigate: (String) -> Unit) {
         NavHost(
             navController = navController,
             startDestination = bottomNavigationItems[selectedItem].title,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             composable("home") {
                 HomeScreen(navigate = navigate)
